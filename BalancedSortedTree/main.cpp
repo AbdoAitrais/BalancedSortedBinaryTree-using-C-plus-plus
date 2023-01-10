@@ -6,8 +6,8 @@ int main() {
     BSTree<int> bst;
     int value = 10005;
 
-    for (int i = 0; i < 30000; ++i) {
-        bst.insert(rand()%20000);
+    for (int i = 0; i < 100000000; ++i) {
+        bst.insert(i);
     }
     float start = clock();
     bool exist = bst.find(value);
@@ -23,7 +23,10 @@ int main() {
 
     cout << endl;
 
+
     //bst.showGraphicBSTree();
+
+    //cout << bst.root->left->left->left->height;
 
     return 0;
 }

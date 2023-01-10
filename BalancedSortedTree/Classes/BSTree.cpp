@@ -46,6 +46,7 @@ Node<Type>::Node(){
     data = (Type) nullptr;
     left = nullptr;
     right = nullptr;
+    height = 1;
 }
 
 template <typename Type>
@@ -53,6 +54,7 @@ Node<Type>::Node(Type data){
     this->data = data;
     left = nullptr;
     right = nullptr;
+    height = 1;
 }
 
 template <typename Type>
@@ -139,6 +141,8 @@ void BSTree<Type>::showPostorder() {
 template <typename Type>
 Node<Type>* BSTree<Type>::insertionBalanced(Type data,Node<Type>* leaf)
 {
+    int depthLeft = 0;
+    int depthRight = 0;
     if (!leaf)
     {
         return (Node<Type>*) new Node<Type>(data);
@@ -146,13 +150,13 @@ Node<Type>* BSTree<Type>::insertionBalanced(Type data,Node<Type>* leaf)
     if (leaf->get_data() > data)
     {
         leaf->left = insertionBalanced(data,leaf->left);
-
     }
     else if (leaf->get_data() < data)
     {
         leaf->right = insertionBalanced(data,leaf->right);
     }
 
+    leaf->height = max(getHeight(leaf->left),getHeight(leaf->right)) + 1;
 
     int bf = balanceValue(leaf);
 
@@ -191,24 +195,36 @@ template<typename Type>
 int BSTree<Type>::balanceValue(Node<Type> * leaf){
     if (!leaf)
         return -1;
-    return (depth(leaf->left) - depth(leaf->right));
+    return (getHeight(leaf->left) - getHeight(leaf->right));
 }
 
 template <typename Type>
-Node<Type>* BSTree<Type>::leftRotation(Node<Type>* nd)
+Node<Type>* BSTree<Type>::leftRotation(Node<Type>* x)
 {
-    Node<Type> *x = nd->right,*y = x->left;
-    x->left = nd;
-    nd->right = y;
-    return x;
+    Node<Type> *y = x->right;
+    Node<Type> *T2 = y->left;
+
+    y->left = x;
+    x->right = T2;
+
+    x->height = std::max(getHeight(x->left), getHeight(x->right)) + 1;
+    y->height = std::max(getHeight(y->left), getHeight(y->right)) + 1;
+
+    return y;
 }
 
 template <typename Type>
-Node<Type>* BSTree<Type>::rightRotation(Node<Type>* nd)
+Node<Type>* BSTree<Type>::rightRotation(Node<Type>* y)
 {
-    Node<Type> *x = nd->left,*y = x->right;
-    x->right = nd;
-    nd->left =  y;
+    Node<Type> *x = y->left;
+    Node<Type> *T2 = x->right;
+
+    x->right = y;
+    y->left = T2;
+
+    y->height = std::max(getHeight(y->left), getHeight(y->right)) + 1;
+    x->height = std::max(getHeight(x->left), getHeight(x->right)) + 1;
+
     return x;
 }
 
@@ -329,4 +345,11 @@ void BSTree<Type>::showGraphicBSTree()
         showNode(root,0);
         printf("\n\n");
     }
+}
+
+template<typename Type>
+int BSTree<Type>::getHeight(Node<Type> *leaf) {
+    if(!leaf)
+        return 0;
+    return leaf->height;
 }

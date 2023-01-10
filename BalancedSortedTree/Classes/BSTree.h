@@ -18,12 +18,13 @@ public:
     void set_data(Type data);
     Node<Type> * left;
     Node<Type> * right;
+    int height;
 };
 
 template <typename Type>
 class BSTree {
+public:Node<Type> * root;
 private:
-    Node<Type> * root;
     Node<Type>* insertionBalanced(Type ,Node<Type>* );
     void showInorder(Node<Type> *);
     void showPreorder(Node<Type> *);
@@ -37,6 +38,7 @@ private:
     void balanceNode(Node<Type> *);
     Node<Type>* leftRotation(Node<Type>* );
     Node<Type>* rightRotation(Node<Type>* );
+    int getHeight(Node<Type> *);
 public:
     BSTree();
     void insert(Type);
